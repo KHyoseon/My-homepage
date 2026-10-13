@@ -23,24 +23,32 @@
 </script>
 
 <style>
-  /* ===== 색상과 기본값 ===== */
+  /* =====================================================================
+     공통 사이트 틀 (index · lunch · pdf-tool · analyzer · dashboard 다섯 페이지에 똑같이 들어 있음)
+     - 색, 글꼴, 전체 폭, 여백, 머리글·본문·바닥글, 카드, 버튼의 기준입니다.
+     - 바꿀 때는 다섯 파일을 모두 같이 바꿔야 하나의 사이트처럼 보입니다.
+     ===================================================================== */
   :root {
-    --navy: #1f3a6d;
-    --navy-dark: #162b52;
-    --navy-soft: #eef2f9;
-    --line: #e3e8f0;
-    --text: #1e2533;
-    --muted: #6b7486;
-    --summer: #d4883a;     /* 여름 */
-    --winter: #4a78c2;     /* 겨울 */
-    --spring: #2e8b74;     /* 봄 */
-    --autumn: #c0504d;     /* 가을 */
-    --red: #c93838;
-    --radius: 16px;
-    --shadow: 0 4px 16px rgba(31, 58, 109, .06);
+    --navy: #1f3a6d;          /* 포인트 남색 */
+    --navy-dark: #162b52;     /* 남색 hover */
+    --navy-mid: #dbe4f3;      /* 선택된 칸 배경 */
+    --navy-soft: #eef2f9;     /* 연한 남색 배경 */
+    --line: #e3e8f0;          /* 테두리 */
+    --text: #1e2533;          /* 본문 글자 */
+    --muted: #6b7486;         /* 보조 글자 */
+    --red: #c93838;           /* 오류 */
+    --ok: #22703a;            /* 완료 */
+    --radius: 16px;           /* 카드 모서리 */
+    --radius-sm: 10px;        /* 버튼·입력칸 모서리 */
+    --shadow: 0 4px 16px rgba(31, 58, 109, .06);   /* 카드 그림자 */
+    --container: 1080px;      /* 본문 최대 폭 */
+    --gutter: 24px;           /* 화면 좌우 여백 */
+    --gap: 20px;              /* 카드와 카드 사이 간격 */
+    --header-h: 56px;         /* 머리글 높이 */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  button, input, select, textarea { font-family: inherit; }
 
   body {
     background: #ffffff;
@@ -48,32 +56,91 @@
     font-family: "Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif;
     font-size: 15px;
     line-height: 1.55;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  /* 본문 폭: 모든 페이지 같은 폭, 가운데 정렬 */
+  .container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
 
-  /* ===== 맨 위 ===== */
-  .top-nav { padding-top: 16px; }
-  .back-link { color: var(--navy); text-decoration: none; font-weight: 500; }
+  /* 머리글: 맨 위 왼쪽 링크 */
+  .site-header { background: #ffffff; border-bottom: 1px solid var(--line); }
+  .site-header .container { height: var(--header-h); display: flex; align-items: center; gap: 12px; }
+  .back-link, .brand { color: var(--navy); text-decoration: none; font-size: 15px; font-weight: 500; }
+  .brand { font-weight: 700; }
   .back-link:hover { text-decoration: underline; }
+  .back-link:focus-visible, .brand:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; border-radius: 4px; }
 
-  header { padding: 22px 0 6px; }
-  header h1 { font-size: 28px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.3; }
-  header .sub { color: var(--muted); margin-top: 6px; font-size: 14.5px; }
-  header .sub b { color: var(--text); font-weight: 500; }
+  /* 본문: 제목 영역 + 카드들이 같은 간격으로 쌓임 */
+  .page { flex: 1; padding-bottom: 56px; }
+  .stack { display: flex; flex-direction: column; gap: var(--gap); }
+  .page-title { padding-top: 32px; }
+  .page-title h1 { font-size: 28px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.3; }
+  .page-title p { margin-top: 6px; font-size: 15px; color: var(--muted); }
 
-  /* ===== 카드 공통 ===== */
+  /* 카드 */
   .card {
-    background: #fff;
+    background: #ffffff;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 20px 22px;
+    padding: 24px;
   }
+
+  /* 버튼 */
+  .btn {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    padding: 9px 18px;
+    cursor: pointer;
+    background: var(--navy);
+    color: #ffffff;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn:hover:not(:disabled) { background: var(--navy-dark); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; }
+  .btn-outline { background: #ffffff; color: var(--navy); border-color: var(--navy); }
+  .btn-outline:hover:not(:disabled) { background: var(--navy-soft); }
+  .btn-small { padding: 6px 12px; font-size: 13px; }
+
+  /* 바닥글: 맨 아래 작은 글씨 */
+  .site-footer { border-top: 1px solid var(--line); padding: 24px 0 32px; text-align: center; font-size: 12px; color: var(--muted); }
+  .site-footer p + p { margin-top: 4px; }
+  .site-footer b { color: var(--text); font-weight: 500; }
+
+  .hidden { display: none !important; }
+
+  /* 휴대폰 (640px 이하): 여백·제목 크기 줄이기 */
+  @media (max-width: 640px) {
+    :root { --gutter: 16px; --gap: 16px; }
+    .page-title { padding-top: 24px; }
+    .page-title h1 { font-size: 22px; }
+    .card { padding: 18px 16px; }
+  }
+  /* ===================== 공통 사이트 틀 끝 ===================== */
+
+  /* ===================== 이 페이지 전용 ===================== */
+  :root {
+    --summer: #d4883a;     /* 여름 */
+    --winter: #4a78c2;     /* 겨울 */
+    --spring: #2e8b74;     /* 봄 */
+    --autumn: #c0504d;     /* 가을 */
+  }
+  .page-title p b { color: var(--text); font-weight: 500; }
 
   /* ===== 기간 필터 ===== */
   .filter {
-    margin-top: 18px;
     display: flex;
     align-items: flex-end;
     gap: 10px 16px;
@@ -95,29 +162,11 @@
   .filter .range-info { font-size: 13.5px; color: var(--navy); font-weight: 500; padding-bottom: 8px; }
   .filter .spacer { flex: 1; }
 
-  .btn {
-    font: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    padding: 8px 16px;
-    cursor: pointer;
-    background: var(--navy);
-    color: #fff;
-    white-space: nowrap;
-  }
-  .btn:hover { background: var(--navy-dark); }
-  .btn:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; }
-  .btn-outline { background: #fff; color: var(--navy); border-color: var(--navy); }
-  .btn-outline:hover { background: var(--navy-soft); }
-
   /* ===== KPI 카드 ===== */
   .kpis {
-    margin-top: 18px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: var(--gap);
   }
   .kpi { padding: 18px 20px; }
   .kpi .label { font-size: 13px; color: var(--muted); font-weight: 500; }
@@ -127,13 +176,12 @@
 
   /* ===== 차트 카드 ===== */
   .charts {
-    margin-top: 18px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: var(--gap);
   }
   .chart-card.wide { grid-column: 1 / -1; }
-  .chart-card h2 { font-size: 16.5px; color: var(--navy); font-weight: 700; }
+  .chart-card h2 { font-size: 17px; color: var(--navy); font-weight: 700; }
   .chart-card .hint { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
   .chart-box { position: relative; height: 300px; margin-top: 12px; }
   .chart-card.wide .chart-box { height: 320px; }
@@ -171,7 +219,7 @@
   }
 
   /* ===== 불러오기 실패 안내 ===== */
-  .load-panel { margin-top: 22px; text-align: center; padding: 40px 22px; }
+  .load-panel { text-align: center; padding: 40px 22px; }
   .load-panel .icon { font-size: 40px; }
   .load-panel h2 { font-size: 18px; color: var(--navy); margin: 10px 0 6px; }
   .load-panel p { color: var(--muted); font-size: 14px; }
@@ -180,22 +228,12 @@
   .load-panel .err { color: var(--red); font-size: 13px; margin-top: 10px; }
   .loading { text-align: center; color: var(--muted); padding: 60px 0; }
 
-  /* ===== 맨 아래 ===== */
-  .source { margin-top: 28px; text-align: center; font-size: 13px; color: var(--muted); }
-  .source b { color: var(--text); font-weight: 500; }
-  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 24px 30px; }
-
-  .hidden { display: none !important; }
-
   /* ===== 화면 크기별 배치 ===== */
   @media (max-width: 900px) {
     .kpis { grid-template-columns: repeat(2, 1fr); }
     .charts { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .wrap { padding: 0 16px; }
-    header h1 { font-size: 22px; }
-    .card { padding: 16px; }
     .kpi .value { font-size: 21px; }
     .chart-box, .chart-card.wide .chart-box { height: 260px; }
     .filter label { flex: 1 1 140px; }
@@ -206,14 +244,18 @@
 </head>
 <body>
 
-<div class="wrap">
-  <!-- 맨 위 왼쪽: 업무 도구 모음으로 돌아가기 -->
-  <nav class="top-nav"><a href="index.html" class="back-link">← 업무 도구 모음</a></nav>
+<!-- 공통 머리글: 맨 위 왼쪽 돌아가기 링크 -->
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="back-link">← 업무 도구 모음</a>
+  </div>
+</header>
 
-  <header>
+<main class="page container stack">
+  <section class="page-title">
     <h1>우리나라는 언제 전기를 가장 많이 쓸까?</h1>
-    <p class="sub" id="subtitle">데이터를 불러오는 중… · 출처 <b>공공데이터포털 · 한국전력거래소</b></p>
-  </header>
+    <p id="subtitle">데이터를 불러오는 중… · 출처 <b>공공데이터포털 · 한국전력거래소</b></p>
+  </section>
 
   <!-- 불러오는 중 -->
   <div class="loading" id="loading">⏳ data.csv를 불러오는 중입니다…</div>
@@ -230,7 +272,7 @@
   </section>
 
   <!-- 대시보드 본문 -->
-  <main id="dash" class="hidden">
+  <div id="dash" class="stack hidden">
     <!-- 기간 필터 -->
     <div class="card filter">
       <label>연도
@@ -310,13 +352,17 @@
         <p class="comment" id="monthComment"></p>
       </article>
     </section>
-  </main>
+  </div>
 
-  <!-- 출처와 데이터 기준일 -->
-  <p class="source" id="source">출처: <b>공공데이터포털 · 한국전력거래소</b> 「시간별 전국 전력수요량」</p>
-</div>
+</main>
 
-<footer>입력한 내용은 이 브라우저 안에서만 처리되며 어디에도 저장·전송되지 않습니다.</footer>
+<!-- 공통 바닥글 -->
+<footer class="site-footer">
+  <div class="container">
+    <p id="source">출처: <b>공공데이터포털 · 한국전력거래소</b> 「시간별 전국 전력수요량」</p>
+    <p>입력한 내용은 이 브라우저 안에서만 처리되며 어디에도 저장·전송되지 않습니다.</p>
+  </div>
+</footer>
 
 <!-- =====================================================================
      A. 계산 규칙 (화면과 상관없는 함수들)

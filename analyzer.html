@@ -29,24 +29,32 @@
 </script>
 
 <style>
-  /* ===== 색상과 기본값 ===== */
+  /* =====================================================================
+     공통 사이트 틀 (index · lunch · pdf-tool · analyzer · dashboard 다섯 페이지에 똑같이 들어 있음)
+     - 색, 글꼴, 전체 폭, 여백, 머리글·본문·바닥글, 카드, 버튼의 기준입니다.
+     - 바꿀 때는 다섯 파일을 모두 같이 바꿔야 하나의 사이트처럼 보입니다.
+     ===================================================================== */
   :root {
-    --navy: #1f3a6d;        /* 포인트 남색 */
-    --navy-dark: #162b52;   /* 남색 hover */
-    --navy-soft: #eef2f9;   /* 연한 남색 배경 */
-    --navy-mid: #dbe4f3;    /* 선택/막대 배경 */
-    --line: #e3e8f0;        /* 테두리 */
-    --text: #1e2533;        /* 본문 글자 */
-    --muted: #6b7486;       /* 보조 글자 */
-    --warn: #b4580f;        /* 확인 필요 */
-    --warn-bg: #fff6e8;
-    --ok: #22703a;
-    --red: #c93838;
-    --radius: 16px;
-    --shadow: 0 4px 16px rgba(31, 58, 109, .06);
+    --navy: #1f3a6d;          /* 포인트 남색 */
+    --navy-dark: #162b52;     /* 남색 hover */
+    --navy-mid: #dbe4f3;      /* 선택된 칸 배경 */
+    --navy-soft: #eef2f9;     /* 연한 남색 배경 */
+    --line: #e3e8f0;          /* 테두리 */
+    --text: #1e2533;          /* 본문 글자 */
+    --muted: #6b7486;         /* 보조 글자 */
+    --red: #c93838;           /* 오류 */
+    --ok: #22703a;            /* 완료 */
+    --radius: 16px;           /* 카드 모서리 */
+    --radius-sm: 10px;        /* 버튼·입력칸 모서리 */
+    --shadow: 0 4px 16px rgba(31, 58, 109, .06);   /* 카드 그림자 */
+    --container: 1080px;      /* 본문 최대 폭 */
+    --gutter: 24px;           /* 화면 좌우 여백 */
+    --gap: 20px;              /* 카드와 카드 사이 간격 */
+    --header-h: 56px;         /* 머리글 높이 */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  button, input, select, textarea { font-family: inherit; }
 
   body {
     background: #ffffff;
@@ -54,29 +62,88 @@
     font-family: "Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif;
     font-size: 15px;
     line-height: 1.55;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
-  body.no-scroll { overflow: hidden; }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  /* 본문 폭: 모든 페이지 같은 폭, 가운데 정렬 */
+  .container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
 
-  /* ===== 맨 위: 돌아가기 링크와 제목 ===== */
-  .top-nav { padding-top: 16px; }
-  .back-link { color: var(--navy); text-decoration: none; font-weight: 500; font-size: 15px; }
+  /* 머리글: 맨 위 왼쪽 링크 */
+  .site-header { background: #ffffff; border-bottom: 1px solid var(--line); }
+  .site-header .container { height: var(--header-h); display: flex; align-items: center; gap: 12px; }
+  .back-link, .brand { color: var(--navy); text-decoration: none; font-size: 15px; font-weight: 500; }
+  .brand { font-weight: 700; }
   .back-link:hover { text-decoration: underline; }
+  .back-link:focus-visible, .brand:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; border-radius: 4px; }
 
-  header { padding: 18px 0 8px; }
-  header h1 { font-size: 26px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; }
-  header p { color: var(--muted); font-size: 14.5px; margin-top: 4px; }
+  /* 본문: 제목 영역 + 카드들이 같은 간격으로 쌓임 */
+  .page { flex: 1; padding-bottom: 56px; }
+  .stack { display: flex; flex-direction: column; gap: var(--gap); }
+  .page-title { padding-top: 32px; }
+  .page-title h1 { font-size: 28px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.3; }
+  .page-title p { margin-top: 6px; font-size: 15px; color: var(--muted); }
 
-  /* ===== 단계(카드) 공통 ===== */
-  .step {
+  /* 카드 */
+  .card {
     background: #ffffff;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 24px;
-    margin-top: 20px;
   }
+
+  /* 버튼 */
+  .btn {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    padding: 9px 18px;
+    cursor: pointer;
+    background: var(--navy);
+    color: #ffffff;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn:hover:not(:disabled) { background: var(--navy-dark); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; }
+  .btn-outline { background: #ffffff; color: var(--navy); border-color: var(--navy); }
+  .btn-outline:hover:not(:disabled) { background: var(--navy-soft); }
+  .btn-small { padding: 6px 12px; font-size: 13px; }
+
+  /* 바닥글: 맨 아래 작은 글씨 */
+  .site-footer { border-top: 1px solid var(--line); padding: 24px 0 32px; text-align: center; font-size: 12px; color: var(--muted); }
+  .site-footer p + p { margin-top: 4px; }
+  .site-footer b { color: var(--text); font-weight: 500; }
+
+  .hidden { display: none !important; }
+
+  /* 휴대폰 (640px 이하): 여백·제목 크기 줄이기 */
+  @media (max-width: 640px) {
+    :root { --gutter: 16px; --gap: 16px; }
+    .page-title { padding-top: 24px; }
+    .page-title h1 { font-size: 22px; }
+    .card { padding: 18px 16px; }
+  }
+  /* ===================== 공통 사이트 틀 끝 ===================== */
+
+  /* ===================== 이 페이지 전용 ===================== */
+  :root {
+    --warn: #b4580f;        /* 확인 필요 */
+    --warn-bg: #fff6e8;
+  }
+  body.no-scroll { overflow: hidden; }
+
+  /* 단계 카드의 머리 */
   .step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   .step-num {
     background: var(--navy);
@@ -87,30 +154,9 @@
     border-radius: 999px;
     white-space: nowrap;
   }
-  .step-head h2 { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .step-head h2 { font-size: 17px; font-weight: 700; color: var(--navy); }
   .step-head .sub { color: var(--muted); font-size: 13.5px; }
   .step-head .spacer { flex: 1; }
-
-  /* ===== 버튼 ===== */
-  .btn {
-    font: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    padding: 9px 18px;
-    cursor: pointer;
-    background: var(--navy);
-    color: #fff;
-    white-space: nowrap;
-    transition: background .15s;
-  }
-  .btn:hover:not(:disabled) { background: var(--navy-dark); }
-  .btn:disabled { opacity: .45; cursor: not-allowed; }
-  .btn:focus-visible { outline: 3px solid #8fa6cf; outline-offset: 2px; }
-  .btn-outline { background: #fff; color: var(--navy); border-color: var(--navy); }
-  .btn-outline:hover:not(:disabled) { background: var(--navy-soft); }
-  .btn-small { padding: 6px 12px; font-size: 13px; }
 
   /* ===== 1단계: 파일 올리기 ===== */
   .dropzone {
@@ -386,16 +432,8 @@
   .notice.error { background: #fceded; color: var(--red); border: 1px solid #f1c6c6; }
   .notice.ok { background: #eaf6ee; color: var(--ok); border: 1px solid #bfe3ca; }
 
-  /* 맨 아래 안내 문구 */
-  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 32px 24px 30px; }
-
-  .hidden { display: none !important; }
-
   /* ===== 휴대폰 화면 ===== */
   @media (max-width: 640px) {
-    .wrap { padding: 0 16px; }
-    header h1 { font-size: 22px; }
-    .step { padding: 18px 16px; }
     .dropzone { padding: 30px 14px; }
     .col-grid, .rec-grid { grid-template-columns: 1fr; }
     .modal-backdrop { padding: 0; }
@@ -412,17 +450,21 @@
 </head>
 <body>
 
-<div class="wrap">
-  <!-- 맨 위 왼쪽: 업무 도구 모음으로 돌아가기 -->
-  <nav class="top-nav"><a href="index.html" class="back-link">← 업무 도구 모음</a></nav>
+<!-- 공통 머리글: 맨 위 왼쪽 돌아가기 링크 -->
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="back-link">← 업무 도구 모음</a>
+  </div>
+</header>
 
-  <header>
+<main class="page container stack">
+  <section class="page-title">
     <h1>자동 데이터 분석기</h1>
     <p>CSV나 엑셀 파일을 넣으면 열을 분석하고, 요약 문장과 어울리는 차트를 추천해요.</p>
-  </header>
+  </section>
 
   <!-- ===================== 1단계: 파일 ===================== -->
-  <section class="step" id="step1">
+  <section class="card step" id="step1">
     <div class="step-head">
       <span class="step-num">1단계</span>
       <h2>파일 올리기</h2>
@@ -448,7 +490,7 @@
   </section>
 
   <!-- ===================== 2단계: 열 분석 ===================== -->
-  <section class="step hidden" id="step2">
+  <section class="card step hidden" id="step2">
     <div class="step-head">
       <span class="step-num">2단계</span>
       <h2>열 자동 분석</h2>
@@ -458,7 +500,7 @@
   </section>
 
   <!-- ===================== 3단계: 요약 ===================== -->
-  <section class="step hidden" id="step3">
+  <section class="card step hidden" id="step3">
     <div class="step-head">
       <span class="step-num">3단계</span>
       <h2>자동 요약</h2>
@@ -468,7 +510,7 @@
   </section>
 
   <!-- ===================== 4단계: 차트 추천 ===================== -->
-  <section class="step hidden" id="step4">
+  <section class="card step hidden" id="step4">
     <div class="step-head">
       <span class="step-num">4단계</span>
       <h2>차트 추천</h2>
@@ -478,7 +520,7 @@
   </section>
 
   <!-- ===================== 5단계: AI 요약 복사 ===================== -->
-  <section class="step hidden" id="step5">
+  <section class="card step hidden" id="step5">
     <div class="step-head">
       <span class="step-num">5단계</span>
       <h2>AI에게 물어볼 요약 복사</h2>
@@ -490,9 +532,14 @@
       <span class="copy-msg" id="copyMsg" role="status" aria-live="polite"></span>
     </div>
   </section>
-</div>
+</main>
 
-<footer>입력한 내용은 이 브라우저 안에서만 처리되며 어디에도 저장·전송되지 않습니다.</footer>
+<!-- 공통 바닥글 -->
+<footer class="site-footer">
+  <div class="container">
+    <p>입력한 내용은 이 브라우저 안에서만 처리되며 어디에도 저장·전송되지 않습니다.</p>
+  </div>
+</footer>
 
 <!-- 차트 크게 보기 창 -->
 <div class="modal-backdrop" id="chartModal">
