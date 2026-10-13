@@ -743,6 +743,13 @@
 </div>
 
 <script>
+// 개발자 도구에 기록 남기기 (console이 없거나 막힌 환경에서도 오류가 나지 않도록)
+function devLog(...args) {
+  try {
+    if (window.console && typeof console.log === 'function') console.log(...args);
+  } catch (e) { /* 기록을 못 남겨도 화면 동작에는 영향 없음 */ }
+}
+
 /* =========================================================
    1. 화면 요소 가져오기
    ========================================================= */
@@ -881,7 +888,7 @@ async function addFiles(fileListLike) {
         originalPages: pages
       });
     } catch (err) {
-      console.error(file.name, err);
+      devLog(file.name, err);
       failed.push(file.name);
     }
   }
@@ -1088,7 +1095,7 @@ mergeBtn.addEventListener('click', async () => {
     downloadPdf(outBytes, name);
     showNotice(`병합을 마쳤습니다. "${name}" 파일이 다운로드 폴더에 저장됩니다. (총 ${merged.getPageCount()}쪽)`, 'ok');
   } catch (err) {
-    console.error(err);
+    devLog(err);
     showNotice('병합하지 못했습니다. 암호가 걸렸거나 손상된 PDF가 있는지 확인한 뒤 다시 시도해 주세요.');
   } finally {
     hideBusy();
@@ -1179,7 +1186,7 @@ async function loadViewer() {
     if (mySession !== session) { doc.destroy(); return; }
     viewerDoc = doc;
   } catch (err) {
-    console.error(err);
+    devLog(err);
     if (mySession === session) {
       thumbsEl.innerHTML = '<div class="thumbs-msg">이 파일의 페이지를 표시할 수 없습니다. 암호가 걸려 있거나 손상된 파일일 수 있습니다.</div>';
     }
@@ -1234,7 +1241,7 @@ function enqueueThumb(thumbEl, mySession) {
       paper.appendChild(canvas);
       paper.classList.add('ready');
     } catch (err) {
-      console.error(err);
+      devLog(err);
     }
   });
 }
@@ -1356,7 +1363,7 @@ $('deletePagesBtn').addEventListener('click', async () => {
     await loadViewer();
     showNotice(`"${f.name}"에서 ${removed}쪽을 지웠습니다.`, 'ok');
   } catch (err) {
-    console.error(err);
+    devLog(err);
     alert('페이지를 지우지 못했습니다. 암호가 걸렸거나 손상된 파일일 수 있습니다.');
   } finally {
     hideBusy();
@@ -1375,7 +1382,7 @@ $('extractBtn').addEventListener('click', async () => {
     downloadPdf(out, name);
     showNotice(`${pages.length}쪽을 추출했습니다. "${name}" 파일이 다운로드 폴더에 저장됩니다.`, 'ok');
   } catch (err) {
-    console.error(err);
+    devLog(err);
     alert('페이지를 추출하지 못했습니다. 암호가 걸렸거나 손상된 파일일 수 있습니다.');
   } finally {
     hideBusy();
@@ -1434,7 +1441,7 @@ async function drawPreview() {
     body.appendChild(canvas);
     body.scrollTop = 0;
   } catch (err) {
-    console.error(err);
+    devLog(err);
     body.innerHTML = '<p style="color:#fff">이 페이지를 표시할 수 없습니다.</p>';
   }
 }
@@ -1517,7 +1524,7 @@ async function loadSplitFile(fileListLike) {
       bytes, originalBytes: bytes, originalPages: pages
     };
   } catch (err) {
-    console.error(err);
+    devLog(err);
     showNotice(`"${file.name}" 파일을 열 수 없습니다. 손상되었거나 암호가 걸린 파일일 수 있습니다.`);
     return;
   }
@@ -1699,7 +1706,7 @@ $('splitBtn').addEventListener('click', async () => {
     showNotice(`${splitPlan.length}개 파일로 나눴습니다. 다운로드 폴더를 확인해 주세요. ` +
       (splitPlan.length > 1 ? '브라우저가 "여러 파일 다운로드"를 허용할지 물으면 [허용]을 눌러 주세요. 받지 못한 파일은 목록의 [다시 받기]로 받을 수 있습니다.' : ''), 'ok');
   } catch (err) {
-    console.error(err);
+    devLog(err);
     showNotice('분할하지 못했습니다. 암호가 걸렸거나 손상된 파일인지 확인해 주세요.');
   } finally {
     hideBusy();
